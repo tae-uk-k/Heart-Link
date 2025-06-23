@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💕 Love Match - 연애 궁합 테스트</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #FFD700;
+            text-align: center;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .input-field {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #FFD700;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .mbti-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .mbti-option {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .mbti-option:hover {
+            background: rgba(255, 215, 0, 0.3);
+            border-color: #FFD700;
+            transform: scale(1.05);
+        }
+
+        .mbti-option.selected {
+            background: #FFD700;
+            color: #764ba2;
+            border-color: #FFD700;
+        }
+
+        .check-button {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(45deg, #FF6B6B, #FF8E53);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .check-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            text-align: center;
+            display: none;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .compatibility-score {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #FFD700;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .result-text {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .result-details {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .heart {
+            position: absolute;
+            color: rgba(255, 215, 0, 0.3);
+            font-size: 20px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+            
+            .input-row {
+                flex-direction: column;
+            }
+            
+            .mbti-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts" id="hearts"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>💕 Love Match</h1>
+            <p>이름과 MBTI로 알아보는 완벽한 연애 궁합!</p>
+        </div>
+
+        <div class="form-container">
+            <div class="form-section">
+                <h3>👫 커플 정보 입력</h3>
+                <div class="input-group">
+                    <div class="input-row">
+                        <div class="input-field">
+                            <label for="name1">첫 번째 이름</label>
+                            <input type="text" id="name1" placeholder="이름을 입력하세요">
+                        </div>
+                        <div class="input-field">
+                            <label for="name2">두 번째 이름</label>
+                            <input type="text" id="name2" placeholder="이름을 입력하세요">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>🧠 MBTI 선택</h3>
+                <div class="input-group">
+                    <div class="input-field">
+                        <label>첫 번째 사람의 MBTI</label>
+                        <div class="mbti-grid" id="mbti1">
+                            <div class="mbti-option" data-type="INTJ">INTJ</div>
+                            <div class="mbti-option" data-type="INTP">INTP</div>
+                            <div class="mbti-option" data-type="ENTJ">ENTJ</div>
+                            <div class="mbti-option" data-type="ENTP">ENTP</div>
+                            <div class="mbti-option" data-type="INFJ">INFJ</div>
+                            <div class="mbti-option" data-type="INFP">INFP</div>
+                            <div class="mbti-option" data-type="ENFJ">ENFJ</div>
+                            <div class="mbti-option" data-type="ENFP">ENFP</div>
+                            <div class="mbti-option" data-type="ISTJ">ISTJ</div>
+                            <div class="mbti-option" data-type="ISFJ">ISFJ</div>
+                            <div class="mbti-option" data-type="ESTJ">ESTJ</div>
+                            <div class="mbti-option" data-type="ESFJ">ESFJ</div>
+                            <div class="mbti-option" data-type="ISTP">ISTP</div>
+                            <div class="mbti-option" data-type="ISFP">ISFP</div>
+                            <div class="mbti-option" data-type="ESTP">ESTP</div>
+                            <div class="mbti-option" data-type="ESFP">ESFP</div>
+                        </div>
+                    </div>
+                    
+                    <div class="input-field">
+                        <label>두 번째 사람의 MBTI</label>
+                        <div class="mbti-grid" id="mbti2">
+                            <div class="mbti-option" data-type="INTJ">INTJ</div>
+                            <div class="mbti-option" data-type="INTP">INTP</div>
+                            <div class="mbti-option" data-type="ENTJ">ENTJ</div>
+                            <div class="mbti-option" data-type="ENTP">ENTP</div>
+                            <div class="mbti-option" data-type="INFJ">INFJ</div>
+                            <div class="mbti-option" data-type="INFP">INFP</div>
+                            <div class="mbti-option" data-type="ENFJ">ENFJ</div>
+                            <div class="mbti-option" data-type="ENFP">ENFP</div>
+                            <div class="mbti-option" data-type="ISTJ">ISTJ</div>
+                            <div class="mbti-option" data-type="ISFJ">ISFJ</div>
+                            <div class="mbti-option" data-type="ESTJ">ESTJ</div>
+                            <div class="mbti-option" data-type="ESFJ">ESFJ</div>
+                            <div class="mbti-option" data-type="ISTP">ISTP</div>
+                            <div class="mbti-option" data-type="ISFP">ISFP</div>
+                            <div class="mbti-option" data-type="ESTP">ESTP</div>
+                            <div class="mbti-option" data-type="ESFP">ESFP</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="check-button" onclick="checkCompatibility()">
+                💖 궁합 확인하기 💖
+            </button>
+
+            <div class="result" id="result">
+                <div class="compatibility-score" id="score">0%</div>
+                <div class="result-text" id="resultText"></div>
+                <div class="result-details" id="details"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedMBTI1 = '';
+        let selectedMBTI2 = '';
+
+        // MBTI 선택 기능
+        document.querySelectorAll('#mbti1 .mbti-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('#mbti1 .mbti-option').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedMBTI1 = this.dataset.type;
+            });
+        });
+
+        document.querySelectorAll('#mbti2 .mbti-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('#mbti2 .mbti-option').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedMBTI2 = this.dataset.type;
+            });
+        });
+
+        // MBTI 궁합 데이터
+        const compatibilityData = {
+            'INTJ': { 'ENFP': 95, 'ENTP': 90, 'INFP': 85, 'ENFJ': 80, 'INTP': 75 },
+            'INTP': { 'ENFJ': 95, 'ENTJ': 90, 'INFJ': 85, 'ENFP': 80, 'INTJ': 75 },
+            'ENTJ': { 'INFP': 95, 'INTP': 90, 'ENFP': 85, 'INTJ': 80, 'ENFJ': 75 },
+            'ENTP': { 'INFJ': 95, 'INTJ': 90, 'ENFJ': 85, 'INFP': 80, 'ENTJ': 75 },
+            'INFJ': { 'ENTP': 95, 'ENFP': 90, 'INTJ': 85, 'INFP': 80, 'ENTJ': 75 },
+            'INFP': { 'ENTJ': 95, 'ENFJ': 90, 'INTJ': 85, 'ENTP': 80, 'INFJ': 75 },
+            'ENFJ': { 'INTP': 95, 'INFP': 90, 'ENTP': 85, 'INTJ': 80, 'INFJ': 75 },
+            'ENFP': { 'INTJ': 95, 'INFJ': 90, 'ENTJ': 85, 'INTP': 80, 'ENTP': 75 },
+            'ISTJ': { 'ESFP': 90, 'ESTP': 85, 'ENFP': 80, 'ISFP': 75, 'ESFJ': 70 },
+            'ISFJ': { 'ESTP': 90, 'ESFP': 85, 'ENFP': 80, 'ISTP': 75, 'ESTJ': 70 },
+            'ESTJ': { 'ISFP': 90, 'ISTP': 85, 'ISFJ': 70, 'ESFJ': 65, 'ISTJ': 60 },
+            'ESFJ': { 'ISTP': 90, 'ISFP': 85, 'ISTJ': 70, 'ESTJ': 65, 'ISFJ': 60 },
+            'ISTP': { 'ESFJ': 90, 'ESTJ': 85, 'ISFJ': 75, 'ESFP': 70, 'ESTP': 65 },
+            'ISFP': { 'ESTJ': 90, 'ESFJ': 85, 'ISTJ': 75, 'ESTP': 70, 'ESFP': 65 },
+            'ESTP': { 'ISFJ': 90, 'ISTJ': 85, 'ISFP': 70, 'ISTP': 65, 'ESFP': 60 },
+            'ESFP': { 'ISTJ': 90, 'ISFJ': 85, 'ISFP': 65, 'ISTP': 60, 'ESTP': 60 }
+        };
+
+        function calculateNameCompatibility(name1, name2) {
+            const getCharSum = (name) => {
+                return name.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
+            };
+            
+            const sum1 = getCharSum(name1);
+            const sum2 = getCharSum(name2);
+            const difference = Math.abs(sum1 - sum2);
+            
+            return Math.max(60, 100 - (difference % 40));
+        }
+
+        function getMBTICompatibility(mbti1, mbti2) {
+            if (compatibilityData[mbti1] && compatibilityData[mbti1][mbti2]) {
+                return compatibilityData[mbti1][mbti2];
+            } else if (compatibilityData[mbti2] && compatibilityData[mbti2][mbti1]) {
+                return compatibilityData[mbti2][mbti1];
+            } else if (mbti1 === mbti2) {
+                return 85;
+            } else {
+                return Math.floor(Math.random() * 30) + 50;
+            }
+        }
+
+        function getCompatibilityMessage(score) {
+            if (score >= 90) return "💕 천생연분! 완벽한 궁합입니다!";
+            if (score >= 80) return "💖 매우 좋은 궁합! 서로를 잘 이해할 수 있어요!";
+            if (score >= 70) return "💗 좋은 궁합! 노력한다면 좋은 관계가 될 수 있어요!";
+            if (score >= 60) return "💙 보통 궁합! 서로의 차이를 인정하고 존중해보세요!";
+            return "💜 조금 다른 성향이지만, 그래서 더 흥미로울 수 있어요!";
+        }
+
+        function getDetailedAnalysis(mbti1, mbti2, nameScore, mbtiScore) {
+            return `
+                <h4>📊 상세 분석</h4>
+                <p><strong>이름 궁합:</strong> ${nameScore}점 - ${nameScore >= 80 ? '이름의 기운이 잘 맞아요!' : '이름의 기운이 조금 다르네요!'}</p>
+                <p><strong>MBTI 궁합:</strong> ${mbtiScore}점 - ${mbti1}와 ${mbti2}의 궁합도입니다!</p>
+                <p><strong>조언:</strong> ${mbtiScore >= 80 ? '서로의 장점을 살려보세요!' : '차이점을 이해하고 배려해보세요!'}</p>
+            `;
+        }
+
+        function checkCompatibility() {
+            const name1 = document.getElementById('name1').value.trim();
+            const name2 = document.getElementById('name2').value.trim();
+
+            if (!name1 || !name2) {
+                alert('두 사람의 이름을 모두 입력해주세요!');
+                return;
+            }
+
+            if (!selectedMBTI1 || !selectedMBTI2) {
+                alert('두 사람의 MBTI를 모두 선택해주세요!');
+                return;
+            }
+
+            const nameScore = calculateNameCompatibility(name1, name2);
+            const mbtiScore = getMBTICompatibility(selectedMBTI1, selectedMBTI2);
+            const finalScore = Math.round((nameScore + mbtiScore) / 2);
+
+            document.getElementById('score').textContent = finalScore + '%';
+            document.getElementById('resultText').innerHTML = `
+                <h3>${name1} ❤️ ${name2}</h3>
+                <p>${getCompatibilityMessage(finalScore)}</p>
+            `;
+            document.getElementById('details').innerHTML = getDetailedAnalysis(selectedMBTI1, selectedMBTI2, nameScore, mbtiScore);
+            
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+
+            createHearts();
+        }
+
+        function createHearts() {
+            const heartsContainer = document.getElementById('hearts');
+            heartsContainer.innerHTML = '';
+            
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = '💖';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.top = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 2 + 's';
+                heartsContainer.appendChild(heart);
+            }
+        }
+
+        // 초기 하트 생성
+        createHearts();
+    </script>
+</body>
+</html>
